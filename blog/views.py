@@ -36,7 +36,7 @@ def view_article(request, id_article):
     if int(id_article) > 100:
         raise Http404
 
-    return redirect(view_article, id_article=42)
+    return redirect(view_redirection)
 
 def view_redirection(request):
     return HttpResponse("Vous avez été redirigé.")
