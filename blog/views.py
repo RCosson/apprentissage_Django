@@ -6,9 +6,11 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.http import HttpResponse
-from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from datetime import datetime
+from django.shortcuts import render
+from blog.models import Article
+from django.shortcuts import render, get_object_or_404
 
 def home(request):
     """ Exemple de page HTML, non valide pour que l'exemple soit concis """
@@ -22,6 +24,8 @@ def list_articles(request, month, year):
         "Vous avez demandé les articles de {0} {1}.".format(month, year)
     )
 
+from django.http import HttpResponse, Http404
+
 def view_article(request, id_article):
     # Si l'ID est supérieur à 100, nous considérons que l'article n'existe pas
     if int(id_article) > 100:
@@ -29,14 +33,17 @@ def view_article(request, id_article):
 
     return HttpResponse('<h1>Mon article ici</h1>')
 
-def view_article(request, id_article):
-    if int(id_article) > 100:
-        raise Http404
-
-    return redirect(view_redirection)
-
-def view_redirection(request):
-    return HttpResponse("Vous avez été redirigé.")
+from django.http import HttpResponse, Http404
+# from django.shortcuts import redirect
+#
+# def view_article(request, id_article):
+#     if int(id_article) > 100:
+#         raise Http404
+#
+#     return redirect(view_redirection)
+#
+# def view_redirection(request):
+#     return HttpResponse("Vous avez été redirigé.")
 
 
 def date_actuelle(request):
@@ -48,3 +55,12 @@ def addition(request, nombre1, nombre2):
 
     # Retourne nombre1, nombre2 et la somme des deux au tpl
     return render(request, 'blog/addition.html', locals())
+
+def accueil(request):
+    """ Afficher tous les articles de notre blog """
+    articles = Article.objects.all() # Nous sélectionnons tous nos articles
+    return render(request, 'blog/accueil.html', {'derniers_articles': articles})
+
+def lire(request, id):
+    article = get_object_or_404(Article, id=id)
+    return render(request, 'blog/lire.html', {'article':article})
